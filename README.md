@@ -1,4 +1,4 @@
-Examn Plugin
+Exam Plugin
 ============
 
 Dies ist ein Dokwuikiplugin, um Benutzern eine einfach Möglichkeit zum 
