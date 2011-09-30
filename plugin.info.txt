@@ -1,0 +1,7 @@
+base   klausuren
+author Christian Zimmer, Tim Roes
+email  kontakt@hska.info
+date   2011-07-30
+name   Up/Download plugin for examns
+desc   This plugin allows simple up- and download of examns to the normal wiki media space.
+url    http://www.hska.info

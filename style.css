@@ -1,0 +1,23 @@
+div#content form#klausuren_upload {
+	display: block;
+	margin-bottom: 0.8em;
+}
+
+div#content form#klausuren_upload fieldset {
+	margin: 0;
+	line-height: 275%;
+	padding: 0;
+	text-align: left;
+	display: inline-block;
+}
+
+div#content form#klausuren_upload fieldset div {
+	margin: 0 0.5em 0.5em;
+}
+
+div#content form#klausuren_upload fieldset, 
+div#content table.klausuren_download
+{
+	margin-bottom:0.3em;
+	width: 385px;
+}
