@@ -14,6 +14,12 @@ Der Inhalt dieses Git Repositories muss wie folgt gespeichert werden:
 
 Das Pluginverzeichnis MUSS den Namen **klausuren** haben, damit das Plugin funktioniert.
 
+Lizenz
+------
+
+Das Projekt ist unter MIT lizensiert, enthält jedoch Teile von Dritten, die nicht unter MIT stehen.
+Die Datei LICENSE beinhaltet weitere Informationen.
+
 
 Funktionsweise
 --------------
