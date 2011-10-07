@@ -1,0 +1,6 @@
+[klausuren]
+..-2005ws:Herr Mustermann
+2006ss-2007ss:Prof. Hannebambel
+2007ws:Prof. Essor
+2008ss-..:Herr Esel
+[/klausuren]
