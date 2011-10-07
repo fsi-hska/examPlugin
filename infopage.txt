@@ -1,0 +1,23 @@
+====== Klausuren Informationen ======
+
+Um Informationen über die Dozenten dieser Klausur zu hinterlegen, bearbeite einfach diese Seite.
+
+Die Seite muss lediglich einen [klausuren]..[/klausuren] Block beinhalten. Jede Zeile stellt 
+dabei einen Eintrag in folgender Form da:
+
+  JahrSemester[-JahrSemester]:Name des Dozenten
+
+Wobei Jahr eine vierstellige Jahreszahl ist und Semester entweder **ws** oder **ss**. Einen Bereich anzugeben ist optional, ansonsten gilt der Eintrag nur für EIN Semester. Anstatt des JahrSemester können auch zwei Punkte (..) stehen. Dies bedeutet **für alle weiteren Semester** bzw. **seit allen vorherigen Semestern**.
+
+Das könnte dann beispielsweise wie folgt aussehen:
+
+<code>
+[klausuren]
+..-2005ws:Herr Mustermann
+2006ss-2007ss:Prof. Hannebambel
+2007ws:Prof. Essor
+2008ss-..:Herr Esel
+[/klausuren]
+</code>
+
+Wenn du die Seite bearbeitest, wird dieses Beispiel eingefügt, so dass du es nur noch anpassen musst.

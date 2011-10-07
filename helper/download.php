@@ -136,8 +136,9 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 				$dozent = $this->getDozentFromExamn($dozenten, $sem);
 
 				if(empty($dozent) && $lastDozent !== null) {
-					$renderer->doc .= '<tr><td colspan="4">Dozent unbekannt. Korrigieren:  <a href="'.wl($this->getConf('helppage')).'">Wie</a>? ';
-					$renderer->doc .= '<a href="'.wl($this->getConf('unterlagenNS').'/'.$data['lesson'].'/klausuren_info').'">Hier</a>!</td></tr>';
+					$renderer->doc .= '<tr><td colspan="4">Dozent unbekannt. Bitte <a href="'
+						.wl($this->getConf('unterlagenNS').'/'.$data['lesson'].'/klausuren_info')
+						.'">korrigieren</a>!</td></tr>';
 					$lastDozent = null;
 				} elseif($dozent != $lastDozent) {
 					$renderer->doc .= '<tr><td colspan="4">Klausuren von '.$dozent['name'].':</td></tr>';
