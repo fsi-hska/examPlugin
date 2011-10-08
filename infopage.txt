@@ -20,4 +20,4 @@ Das könnte dann beispielsweise wie folgt aussehen:
 [/klausuren]
 </code>
 
-Wenn du die Seite bearbeitest, wird dieses Beispiel eingefügt, so dass du es nur noch anpassen musst.
+Wenn du die Seite zum ersten mal bearbeitest, wird dieses Beispiel eingefügt, so dass du es nur noch anpassen musst.

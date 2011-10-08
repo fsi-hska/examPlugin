@@ -117,13 +117,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 			$lastDozent = array();
 			$dozenten = $this->getAllDozenten($data['lesson']);
 
-			//if($dozenten === null)
-			//	$renderer->doc .= '<div class="dozentenInfos">Es liegen noch keine Infos zu Dozenten vor.</div>';
-			//elseif(is_int($dozenten))
-			//	$renderer->doc .= '<div class="error">Fehler in den <a href="'.wl($this->getConf('unterlagenNS').'/'.$data['lesson'].'/klausuren_info')
-			//		.'">Klausurinfos</a> in Zeile '.$dozenten.'.</div>';
-
-	        $renderer->doc .= '<form action="'.wl($ID).'" method="post">';
+		    $renderer->doc .= '<form action="'.wl($ID).'" method="post">';
 			$renderer->doc .= '<input type="hidden" name="lesson" value="'.$data['lesson'].'">';
 	 		$renderer->doc .= '<table class="inline klausuren_download">';
 	        $renderer->doc .= '<tbody>';
