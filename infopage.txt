@@ -20,4 +20,12 @@ Das könnte dann beispielsweise wie folgt aussehen:
 [/klausuren]
 </code>
 
-Wenn du die Seite zum ersten mal bearbeitest, wird dieses Beispiel eingefügt, so dass du es nur noch anpassen musst.
+Sind alle Klaususren von nur einem Dozenten, reicht folgender Eintrag:
+
+<code>
+[klausuren]
+..:Herr Eder
+[/klausuren]
+</code>
+
+Wenn du die Seite zum ersten mal bearbeitest, wird ein Beispiel automatisch eingefügt, so dass du es nur noch anpassen musst.
