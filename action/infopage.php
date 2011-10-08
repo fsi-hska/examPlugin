@@ -6,8 +6,6 @@ require_once(DOKU_PLUGIN.'action.php');
 
 class action_plugin_klausuren_infopage extends DokuWiki_Action_Plugin {
 
-	private $isInfoPage = false;
-
 	/**
 	 * return some info
 	 */
@@ -26,50 +24,45 @@ class action_plugin_klausuren_infopage extends DokuWiki_Action_Plugin {
 	 * Register its handlers with the dokuwiki's event controller
 	 */
 	function register(&$controller) {
-		$controller->register_hook('ACTION_ACT_PREPROCESS', 'BEFORE', $this,
-			'checkInfoPage');
 		$controller->register_hook('PARSER_WIKITEXT_PREPROCESS', 'BEFORE', $this,
 			'showInfoPage');
 		$controller->register_hook('COMMON_PAGETPL_LOAD', 'BEFORE', $this,
 			'createInfoPage');
 	}
 
+	function _isInfoPage($id) {
+		
+		$s = split(':', $id);
 
-	function checkInfoPage(&$event, $param) {
-
-		global $user, $INFO, $ID, $ACT;
-
-		if($user->data['username'] != 'Tim Roes')
-			return;
-
-		if($INFO['exists']) 
-			//return;
-			$x = 0;
-
-		$s = split(':', $ID);
-
-		if($s[count($s)-1] != 'klausuren_info')
-			return;
-
-		$this->isInfoPage = true;
+		return ($s[count($s)-1] == 'klausuren_info');
 
 	}
 
 	function showInfoPage(&$event, $param) {
 
-		global $ACT;
+		global $ACT, $ID;
 
-		if($ACT != 'show' || !$this->isInfoPage) 
+		if($ACT != 'show' || !$this->_isInfoPage($ID)) 
 			return;
 
 		$content = file_get_contents(DOKU_PLUGIN.'/klausuren/infopage.txt');
-		$event->data = $content;
+		$exists = page_exists($ID);
+
+		if($exists) {
+			$event->data = $content
+				."\n**Aktuell eingetragene Professoren**"
+				."\n<code>".$event->data."\n</code>";
+		} else {
+			$event->data = $content;
+		}
 
 	}
 
 	function createInfoPage(&$event, $param) {
 
-		if(!$this->isInfoPage)
+		global $INFO, $ID;
+
+		if(!$this->_isInfoPage($ID) || $INFO['exists'])
 			return;
 
 		$content = file_get_contents(DOKU_PLUGIN.'/klausuren/infopage_edit.txt');
