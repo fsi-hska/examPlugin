@@ -10,8 +10,9 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		return null;
 	}
 
-	private function getDozentFromExamn($dozenten, $semester) {
+	private function getDozentFromExamn($dozenten, $semester, $course="", $doctype="") {
 
+		if ($dozenten==NULL) $dozenten=array();
 		$ff = function($var) use ($semester) {
 			return (strcmp($semester, $var['from']) >= 0
 				&& strcmp($semester, $var['to']) <= 0);
@@ -37,9 +38,11 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 
 	}
 
-	private function getAllDozenten($kurs) {
+	private function getAllDozenten($kurs, $course="", $doctype="klausuren") {
 
-		$path = DOKU_INC."data/pages/".$this->getConf('unterlagenNS').'/'.$kurs.'/klausuren_info.txt';
+		$path = DOKU_INC."data/pages/".$this->getConf('unterlagenNS');
+		if($course!="") $path .= '/'.$course;
+		$path .= '/'.$kurs.'/klausuren_info.txt';
 
 		// No infos: return null
 		if(!file_exists($path))
@@ -54,12 +57,12 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		foreach($file as $line) {
 
 			// Skip line if we are outside [klausuren]
-			if($line == "[klausuren]") {
+			if($line == "[$doctype]") {
 				$parsing = true;
 				continue;
 			} elseif(!$parsing) {
 				continue;
-			} elseif($line == "[/klausuren]") {
+			} elseif($line == "[/$doctype]") {
 				$parsing = false;
 				break;
 			}
@@ -83,23 +86,37 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 
 	}
 
-	function getAllExams($kurs, $semester = 0){
-		$filepath =  DOKU_INC."data/media/".$this->getConf('unterlagenNS').'/'.$kurs;
-		$pagepath =  DOKU_INC."data/pages/".$this->getConf('unterlagenNS').'/'.$kurs;
+	function getAllExams($kurs, $semester = 0, $course="", $doctype=""){
+		$filepath =  DOKU_INC."data/media/".$this->getConf('unterlagenNS');
+		$pagepath =  DOKU_INC."data/pages/".$this->getConf('unterlagenNS');
+		if($course!="") {
+			$filepath .= '/'.$course;
+			$pagepath .= '/'.$course;
+		}
+		$filepath .= '/'.$kurs;
+		$pagepath .= '/'.$kurs;
+		if($doctype!="") {
+			$filepath .= '/'.$doctype;
+			$pagepath .= '/'.$doctype;
+		}
+		
+		
 		$result = array();
-		$files = scandir($filepath);
-		foreach ($files as $file){
-			if (preg_match('/^'.$kurs.'\_\d{4}(ws|ss)\_klausur.pdf$/', $file)){
-				$pdfSolution = str_replace('klausur', 'loesung', $file);
-				$wikiSolution = str_replace('.pdf', '.txt', $pdfSolution);
-				$sem = preg_replace('/^'.$kurs.'\_(\d{4})(ws|ss)\_klausur.pdf$/', '$1$2', $file);
-				if (!file_exists($filepath.'/'.$pdfSolution)){
-					$pdfSolution = '';
-				}
-				$wikiSolutionExists = file_exists($pagepath.'/'.$wikiSolution); 
-				$wikiSolution = str_replace('.txt', '', $wikiSolution);
-				$result[$sem] = array('klausur' => $file, 'pdfSolution' => $pdfSolution, 
+		if (is_dir($filepath)) {
+			$files = scandir($filepath);
+			foreach ($files as $file){
+				if (preg_match('/^'.$kurs.'\_\d{4}(ws|ss)\_klausur.pdf$/', $file)){
+					$pdfSolution = str_replace('klausur', 'loesung', $file);
+					$wikiSolution = str_replace('.pdf', '.txt', $pdfSolution);
+					$sem = preg_replace('/^'.$kurs.'\_(\d{4})(ws|ss)\_klausur.pdf$/', '$1$2', $file);
+					if (!file_exists($filepath.'/'.$pdfSolution)){
+						$pdfSolution = '';
+					}
+					$wikiSolutionExists = file_exists($pagepath.'/'.$wikiSolution); 
+					$wikiSolution = str_replace('.txt', '', $wikiSolution);
+					$result[$sem] = array('klausur' => $file, 'pdfSolution' => $pdfSolution, 
 						'wikiSolution' => $wikiSolution, 'wikiSolutionExists' => $wikiSolutionExists);
+				}
 			}
 		}
 		return $result;
@@ -108,34 +125,42 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 	function output(&$renderer, $data){
 		global $ID;
 		$help = plugin_load('helper','klausuren_helper');
-		$klausuren = $this->getAllExams($data['lesson']);
+		$klausuren = $this->getAllExams($data['lesson'], 0, $data['course'], $data['doctype']);
 
 		if (sizeof($klausuren) > 0) {
 			$lastExam = array_keys($klausuren);
 			$lastExam = $lastExam[0];
 
 			$lastDozent = array();
-			$dozenten = $this->getAllDozenten($data['lesson']);
+			$dozenten = $this->getAllDozenten($data['lesson'], $data['course'], $data['doctype']);
 
 		    $renderer->doc .= '<form action="'.wl($ID).'" method="post">';
 			$renderer->doc .= '<input type="hidden" name="lesson" value="'.$data['lesson'].'">';
+			$renderer->doc .= '<input type="hidden" name="course" value="'.$data['course'].'">';
+			$renderer->doc .= '<input type="hidden" name="doctype" value="'.$data['doctype'].'">';
 	 		$renderer->doc .= '<table class="inline klausuren_download">';
 	        $renderer->doc .= '<tbody>';
 
-			$path =  $this->getConf('unterlagenNS')."/". $data['lesson'] ;
+			$path =  $this->getConf('unterlagenNS');
+			if($data['course']!="") $path .= '/'.$data['course'];
+			$path .= "/". $data['lesson'] ;
+			if($data['doctype']!="") $path .= '/'.$data['doctype'];
 			$sem = $help->getCurrentSemester();
 			while($sem >= $lastExam){
 				$klausur = $klausuren[$sem];
 
-				$dozent = $this->getDozentFromExamn($dozenten, $sem);
+				$dozent = $this->getDozentFromExamn($dozenten, $sem, $data['course'], $data['doctype']);
 
 				if(empty($dozent) && $lastDozent !== null) {
+					$link = $this->getConf('unterlagenNS');
+					if($data['course']!="") $link .= '/'.$data['course'];
+					$link .= '/'.$data['lesson'].'/klausuren_info';
+					
 					$renderer->doc .= '<tr><td colspan="4">Dozent unbekannt. Bitte <a href="'
-						.wl($this->getConf('unterlagenNS').'/'.$data['lesson'].'/klausuren_info')
-						.'">korrigieren</a>!</td></tr>';
+						.wl($link).'">korrigieren</a>!</td></tr>';
 					$lastDozent = null;
 				} elseif($dozent != $lastDozent) {
-					$renderer->doc .= '<tr><td colspan="4">Klausuren von '.$dozent['name'].':</td></tr>';
+					$renderer->doc .= '<tr><td colspan="4">Unterlagen von '.$dozent['name'].':</td></tr>';
 					$lastDozent = $dozent;
 				}
 
@@ -185,11 +210,23 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 	 * Compress the examns in the $lesson in the given $semesters (array) and
 	 * return an zip object.
 	 */
-	function downloadAsZip($semesters, $lesson) {
-		$filepath =  DOKU_INC."data/media/".$this->getConf('unterlagenNS').'/'.$lesson.'/';
-		$pagewebpath =  str_replace("/",":",$this->getConf('unterlagenNS')) . ':'.$lesson.':';
-		$pagefilepath =  DOKU_INC."data/pages/".$this->getConf('unterlagenNS') . '/'.$lesson.'/';
-
+	function downloadAsZip($semesters, $lesson, $course="", $doctype="") {
+		$filepath =  DOKU_INC."data/media/".$this->getConf('unterlagenNS').'/';
+		$pagewebpath =  str_replace("/",":",$this->getConf('unterlagenNS')).':';
+		$pagefilepath =  DOKU_INC."data/pages/".$this->getConf('unterlagenNS').'/';
+		if($course!="") {
+			$filepath .=  $course.'/';
+			$pagewebpath .=  $course.':';
+			$pagefilepath .=  $course.'/';
+		}
+		$filepath .=  $lesson.'/';
+		$pagewebpath .=  $lesson.':';
+		$pagefilepath .=  $lesson.'/';
+		if($doctype!="") {
+			$filepath .=  $doctype.'/';
+			$pagewebpath .=  $doctype.':';
+			$pagefilepath .=  $doctype.'/';
+		}
 		$helper =& plugin_load('helper', 'klausuren_helper');
 
 		// Zip Libary einbinden
