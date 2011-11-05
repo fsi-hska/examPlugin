@@ -49,7 +49,10 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 		if(empty($_POST['klausur_download']))
 			return;
 
-		$NS = $this->getConf('unterlagenNS').'/'.$_POST['lesson'].'/';
+		$NS = $this->getConf('unterlagenNS').'/';
+		if($_POST['course']!="") $NS .= $_POST['course'].'/';
+		$NS .= $_POST['lesson'].'/';
+		if($_POST['doctype']!="") $NS .= $_POST['doctype'].'/';
 		$NS = cleanID($NS);
 
 		// check authes
@@ -62,13 +65,14 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 		// Check if post data is valid
 		$filter = function($var) { return !preg_match('/^\d{4}(ws|ss)$/', $var); };
 		$filtered = array_filter($_POST['klausur_download'], $filter);
-		if(!empty($filtered) || !preg_match('/^\w+$/', $_POST['lesson'])) {
+		if(!empty($filtered) || !preg_match('/^\w+$/', $_POST['lesson']) || !preg_match('/^(?:\w+)?$/', $_POST['course']) || !preg_match('/^(?:\w+)?$/', $_POST['doctype'])) {
+			//msg("Fehler im System. Dateiupload fehlgeschlagen.", -1);
 			msg("Fehler im System. Dateiupload fehlgeschlagen.", -1);
 			return;
 		}
 	 
 		$helper =& plugin_load('helper', 'klausuren_download');
-		$zip = $helper->downloadAsZip($_POST['klausur_download'], $_POST['lesson']);
+		$zip = $helper->downloadAsZip($_POST['klausur_download'], $_POST['lesson'], $_POST['course'], $_POST['doctype']);
 
 		if($zip == null) {
 			msg("Es traten Fehler beim verpacken der Dateien auf.", -1);

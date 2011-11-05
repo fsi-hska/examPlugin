@@ -71,9 +71,20 @@ class helper_plugin_klausuren_helper extends Dokuwiki_Plugin {
 		return strtoupper(preg_replace('/(\d{4})(ws|ss)/', '$2 $1', $sem));
 	}
 
-	function getKlausurStatus($semester, $lesson){
-        $filepath = DOKU_INC."data/media/".$this->getConf('unterlagenNS').'/'.$lesson;
-        $pagepath = DOKU_INC."data/pages/".$this->getConf('unterlagenNS').'/'.$lesson;
+	function getKlausurStatus($semester, $lesson, $course="", $doctype=""){
+        $filepath = DOKU_INC."data/media/".$this->getConf('unterlagenNS');
+        $pagepath = DOKU_INC."data/pages/".$this->getConf('unterlagenNS');
+		if($course!="") {
+			$filepath .= '/'.$course;
+			$pagepath .= '/'.$course;
+		}
+		$filepath .= '/'.$lesson;
+		$pagepath .= '/'.$lesson;
+		if($doctype!="") {
+			$filepath .= '/'.$doctype;
+			$pagepath .= '/'.$doctype;
+		}
+
 		$klausurFilename = $lesson."_".$semester."_klausur";
 		$solutionFilename = $lesson."_".$semester."_loesung";
 
