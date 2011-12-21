@@ -76,7 +76,10 @@ class helper_plugin_klausuren_helper extends Dokuwiki_Plugin {
         $pagepath = DOKU_INC."data/pages/".$this->getConf('unterlagenNS').'/'.$lesson;
 		$klausurFilename = $lesson."_".$semester."_klausur";
 		$solutionFilename = $lesson."_".$semester."_loesung";
+		$combiFilename = $lesson."_".$semester."_klausur_loesung";
+		
 
+		$isCombi = file_exists($filepath . '/' . $combiFilename . '.pdf');
 		$klausurExist = file_exists($filepath . '/' . $klausurFilename . '.pdf');
 		$pdfSolutionExist = file_exists($filepath . '/' . $solutionFilename . '.pdf');
 		$wikiSolutionExist = file_exists($pagepath . '/' . $solutionFilename . '.txt');
@@ -84,7 +87,8 @@ class helper_plugin_klausuren_helper extends Dokuwiki_Plugin {
 		return array(
 			'klausur' => $klausurExist, 
 			'pdfSolution' => $pdfSolutionExist, 
-			'wikiSolution' => $wikiSolutionExist
+			'wikiSolution' => $wikiSolutionExist,
+			'isCombi' => $isCombi
 		);
 	}
 
