@@ -48,27 +48,49 @@ class action_plugin_klausuren_upload extends DokuWiki_Action_Plugin {
 		}
 
 		// Check if post data is valid
-		if(!in_array($_POST['type'], array('klausur','loesung'))
+		if(!in_array($_POST['type'], array('klausur','loesung','klausur_loesung'))
 			|| !preg_match('/^\d{4}(ws|ss)$/', $_POST['semester'])
 			|| !preg_match('/^\w+$/', $_POST['lesson'])) {
 			msg("Fehler im System. Dateiupload fehlgeschlagen.", -1);
 			return;
 		}
 
-		// Check if klausur exists if solution is uploaded
-		if($_POST['type'] == "loesung") {
-			$helper =& plugin_load('helper', 'klausuren_helper');
-			$exists = $helper->getKlausurStatus($_POST['semester'], $_POST['lesson']);
-			if(!$exists['klausur']) {
-				msg("Bitte zunächst die Klausur von dem entsprechenden Semester hochladen.", -1);
-				return;
-			}
-		}
-
 		// Check if filetype is pdf
 		if(mime_content_type($_FILES['upload']['tmp_name']) != 'application/pdf') {
 			msg("Die Datei muss im PDF Format vorliegen. Falls du sie nicht konvertieren kannst, maile uns die Datei bitte.", -1);
 			return;
+		}
+
+		$helper =& plugin_load('helper', 'klausuren_helper');
+		$exists = $helper->getKlausurStatus($_POST['semester'], $_POST['lesson']);
+
+		// If you try to upload a klausur when a klausur + lösung allready exists
+		if($_POST['type'] == "klausur") {
+			if($exists['klausur_loesung']) {
+				// TODO could be improved to move the klausur_loesung to loesung and upload this klausur
+				msg("Es ist bereits eine Klausur + Lösung hochgeladen.", -1);
+				return;
+			}
+		}
+
+		// Check if neither klausur nor loesung has been uploaded
+		if($_POST['type'] == "klausur_loesung") {
+			if($exists['klausur'] || $exists['loesung']) {
+				msg("Es ist bereits eine Klausur und/oder Lösung hochgeladen.", -1);
+				return;
+			}
+		}
+
+		// Check if klausur exists if solution is uploaded
+		if($_POST['type'] == "loesung") {
+			if(!$exists['klausur_loesung']) {
+				msg("Wir haben bereits eine Klausur + Lösung des entsprechenden Semesters.", -1);
+				return;
+			}
+			if(!$exists['klausur']) {
+				msg("Bitte zunächst die Klausur von dem entsprechenden Semester hochladen.", -1);
+				return;
+			}
 		}
 
 		// handle upload
