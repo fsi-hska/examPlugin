@@ -213,6 +213,9 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		foreach ($semesters as $semester) {
  			// Datei einlesen
 			$filename = $lesson.'_'.$semester.'_klausur.pdf';
+			if(!file_exists($filepath.$filename)) {
+				$filename = $lesson.'_'.$semester.'_klausur_loesung.pdf';
+			}
 			if(file_exists($filepath.$filename)) {
 
 				// Add examn to zip

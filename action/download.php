@@ -63,7 +63,7 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 		$filter = function($var) { return !preg_match('/^\d{4}(ws|ss)$/', $var); };
 		$filtered = array_filter($_POST['klausur_download'], $filter);
 		if(!empty($filtered) || !preg_match('/^\w+$/', $_POST['lesson'])) {
-			msg("Fehler im System. Dateiupload fehlgeschlagen.", -1);
+			msg("Fehler im System. Dateidownload fehlgeschlagen.", -1);
 			return;
 		}
 	 
