@@ -83,7 +83,7 @@ class action_plugin_klausuren_upload extends DokuWiki_Action_Plugin {
 
 		// Check if klausur exists if solution is uploaded
 		if($_POST['type'] == "loesung") {
-			if(!$exists['klausur_loesung']) {
+			if($exists['klausur_loesung']) {
 				msg("Wir haben bereits eine Klausur + Lösung des entsprechenden Semesters.", -1);
 				return;
 			}
