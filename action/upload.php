@@ -95,7 +95,7 @@ class action_plugin_klausuren_upload extends DokuWiki_Action_Plugin {
 
 		// handle upload
 		if($_FILES['upload']['tmp_name']){
-			$_POST['id'] = $_POST['lesson'].'_'.$_POST['semester'].'_'.$_POST['type'].'.pdf';
+			$_POST['mediaid'] = $_POST['lesson'].'_'.$_POST['semester'].'_'.$_POST['type'].'.pdf';
 			$JUMPTO = media_upload($NS,$AUTH);
 		    if($JUMPTO) {
 				$NS = getNS($JUMPTO);
