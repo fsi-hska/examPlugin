@@ -60,7 +60,7 @@ class syntax_plugin_klausuren_main extends DokuWiki_Syntax_Plugin {
 		$renderer->doc .= '<h2>Klausuren</h2>';
 		
 		// Show upload form if user is allowed to upload here
-		if(auth_quickaclcheck($this->getConf('unterlagenNS').'/'.$data['lesson'].':*') >= AUTH_UPLOAD) {
+		if(auth_quickaclcheck(str_replace('/', ':', $this->getConf('unterlagenNS')).':'.$data['lesson'].':*') >= AUTH_UPLOAD) {
 			$uphelper =& plugin_load('helper', 'klausuren_upload');
 			$renderer->section_open(2);
 			$uphelper->output(&$renderer, $data);
