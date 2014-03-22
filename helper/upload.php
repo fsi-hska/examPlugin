@@ -34,9 +34,9 @@ class helper_plugin_klausuren_upload extends Dokuwiki_Plugin {
 		$form->addElement(form_makeFileField('upload', "", 'upload_file', '',
 		   	array('accept' => 'application/pdf')));
 		$form->addElement('<br>');
-		$form->addElement(form_makeListboxField('semester', $helper->getLastSemesters(), '', ''));
+		$form->addElement(form_makeListboxField('semester', $helper->getLastSemesters(20), '', ''));
 		$form->addElement(form_makeListboxField('type', 
-				array('klausur' => 'Klausur', 'loesung' => 'Lösung'),
+				array('klausur' => 'Klausur', 'loesung' => 'Lösung', 'klausur_loesung' => 'Klausur + Lösung'),
 			'', ''));
 		$form->addElement(form_makeButton('submit', '', 'Hochladen'));
 		$form->addElement('</div>');

@@ -105,17 +105,19 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		if (is_dir($filepath)) {
 			$files = scandir($filepath);
 			foreach ($files as $file){
-				if (preg_match('/^'.$kurs.'\_\d{4}(ws|ss)\_klausur.pdf$/', $file)){
+				if (preg_match('/^'.$kurs.'\_\d{4}(ws|ss)\_klausur(_loesung)?.pdf$/', $file)){
+					$isCombi = (boolean)preg_match('/klausur_loesung.pdf$/',$file);
 					$pdfSolution = str_replace('klausur', 'loesung', $file);
 					$wikiSolution = str_replace('.pdf', '.txt', $pdfSolution);
-					$sem = preg_replace('/^'.$kurs.'\_(\d{4})(ws|ss)\_klausur.pdf$/', '$1$2', $file);
+					$sem = preg_replace('/^'.$kurs.'\_(\d{4})(ws|ss)\_klausur(_loesung)?.pdf$/', '$1$2', $file);
 					if (!file_exists($filepath.'/'.$pdfSolution)){
 						$pdfSolution = '';
 					}
 					$wikiSolutionExists = file_exists($pagepath.'/'.$wikiSolution); 
 					$wikiSolution = str_replace('.txt', '', $wikiSolution);
 					$result[$sem] = array('klausur' => $file, 'pdfSolution' => $pdfSolution, 
-						'wikiSolution' => $wikiSolution, 'wikiSolutionExists' => $wikiSolutionExists);
+						'wikiSolution' => $wikiSolution, 'wikiSolutionExists' => $wikiSolutionExists,
+						'isCombi' => $isCombi);
 				}
 			}
 		}
@@ -164,16 +166,26 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 					$lastDozent = $dozent;
 				}
 
+
 				if($klausur!= null){
 					$jsKlausuren[] = '"'.$data['lesson'].'_'.$sem.'"';
 					$renderer->doc .= '<tr>';
 					$renderer->doc .= '<td><input type="checkbox" id="'.$data['lesson'].'_'.$sem.'" name="klausur_download[]" value="' . $sem . '" /></td>';
-		      		$renderer->doc .= '<td><a href="' . wl('_media/' . $path . "/" . $klausur['klausur'] ) 
-						. '" class="media mediafile mf_pdf">Klausur '. $help->getNiceText($sem) . '</a></td>';
-					if ($klausur['pdfSolution'] != "") {
+					if($klausur['isCombi']) {
+						$renderer->doc .= '<td colspan="2">';
+					} else {
+						$renderer->doc .= '<td>';
+					}
+		      		$renderer->doc .= '<a href="' . wl('_media/' . $path . "/" . $klausur['klausur'] ) 
+						. '" class="media mediafile mf_pdf">Klausur ';
+					if($klausur['isCombi']) {
+						$renderer->doc .= '+ Lösung ';
+					}
+					$renderer->doc .= $help->getNiceText($sem) . '</a></td>';
+					if (!$klausur['isCombi'] && $klausur['pdfSolution'] != "") {
 		      			$renderer->doc .= '<td><a href="' . wl('_media/' . $path . "/" . 
 							$klausur['pdfSolution'] ) . '" class="media mediafile mf_pdf">L&ouml;sung ' . '</a></td>';
-					} else {
+					} elseif(!$klausur['isCombi']) {
 						$renderer->doc .= '<td></td>';
 					}
 					if ($klausur['wikiSolutionExists'] == 1) {
@@ -238,6 +250,9 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		foreach ($semesters as $semester) {
  			// Datei einlesen
 			$filename = $lesson.'_'.$semester.'_klausur.pdf';
+			if(!file_exists($filepath.$filename)) {
+				$filename = $lesson.'_'.$semester.'_klausur_loesung.pdf';
+			}
 			if(file_exists($filepath.$filename)) {
 
 				// Add examn to zip
