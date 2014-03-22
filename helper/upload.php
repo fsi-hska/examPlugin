@@ -29,6 +29,8 @@ class helper_plugin_klausuren_upload extends Dokuwiki_Plugin {
 		$form->addElement(formSecurityToken());
 		$form->addHidden('page', hsc($ID));
 		$form->addHidden('lesson', $data['lesson']);
+		$form->addHidden('course', $data['course']);
+		$form->addHidden('doctype', $data['doctype']);
 		$form->addElement(form_makeFileField('upload', "", 'upload_file', '',
 		   	array('accept' => 'application/pdf')));
 		$form->addElement('<br>');

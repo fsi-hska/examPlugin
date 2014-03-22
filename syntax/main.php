@@ -30,7 +30,7 @@ class syntax_plugin_klausuren_main extends DokuWiki_Syntax_Plugin {
 	}
 
 	function connectTo($mode) {
-		$this->Lexer->addSpecialPattern('\{\{klausuren>[A-Za-z0-9]+?\}\}',$mode,'plugin_klausuren_main');
+		$this->Lexer->addSpecialPattern('\{\{klausuren>(?:[\d\w]+\/)?\w+?(?:>\w+?)?\}\}',$mode,'plugin_klausuren_main');
 	}
 
 	/**
@@ -40,9 +40,11 @@ class syntax_plugin_klausuren_main extends DokuWiki_Syntax_Plugin {
 	function handle($match, $state, $pos, &$handler){
 
 		// Grep for lesson
-		$lesson = substr($match, 12, -2);
-		return array('lesson' => $lesson);
-
+		preg_match('/\{\{klausuren>(?:([\w\d]+)\/)?(\w+?)(?:>(\w+?))?\}\}/',$match,$data);
+		$lesson = $data[1];
+		$course = $data[2];
+		$doctype= isset($data[3])?isset($data[3]):'klausuren';
+		return array('course' => $data[1], 'lesson' => $data[2], 'doctype' => $data[3]);
 	}
 
 	/**
@@ -52,12 +54,12 @@ class syntax_plugin_klausuren_main extends DokuWiki_Syntax_Plugin {
 		if($mode != 'xhtml')
 			return false;
 
-		for($i=1;$i < $renderer->lastlevel;$i++) {
+		/*for($i=1;$i < $renderer->lastlevel;$i++) {
 			//$renderer->doc .= '</div>';
 			$renderer->section_close();
-		}
+		}*/
 
-		$renderer->doc .= '<h2>Klausuren</h2>';
+		//$renderer->doc .= '<h2>Klausuren</h2>';
 		
 		// Show upload form if user is allowed to upload here
 		if(auth_quickaclcheck(str_replace('/', ':', $this->getConf('unterlagenNS')).':'.$data['lesson'].':*') >= AUTH_UPLOAD) {
@@ -69,7 +71,7 @@ class syntax_plugin_klausuren_main extends DokuWiki_Syntax_Plugin {
 		
 		// Shows the list of examns
 		$downhelper =& plugin_load('helper','klausuren_download');
-		$renderer->section_open(2);
+		//$renderer->section_open(2);
 		$downhelper->output(&$renderer, $data);
 
 		return true;

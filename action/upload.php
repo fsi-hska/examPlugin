@@ -34,7 +34,10 @@ class action_plugin_klausuren_upload extends DokuWiki_Action_Plugin {
 	 */
 	function files_uploaded(&$event, $param) {
 
-		$NS = $this->getConf('unterlagenNS').'/'.$_POST['lesson'].'/';
+		$NS = $this->getConf('unterlagenNS').'/';
+		if($_POST['course']!="") $NS .= $_POST['course'].'/';
+		$NS .= $_POST['lesson'].'/';
+		if($_POST['doctype']!="") $NS .= $_POST['doctype'].'/';
 		$NS = cleanID($NS);
 
 		if(!$_FILES['upload'])
@@ -50,7 +53,10 @@ class action_plugin_klausuren_upload extends DokuWiki_Action_Plugin {
 		// Check if post data is valid
 		if(!in_array($_POST['type'], array('klausur','loesung','klausur_loesung'))
 			|| !preg_match('/^\d{4}(ws|ss)$/', $_POST['semester'])
-			|| !preg_match('/^\w+$/', $_POST['lesson'])) {
+			|| !preg_match('/^(?:\w+)?$/', $_POST['course'])
+			|| !preg_match('/^\w+$/', $_POST['lesson'])
+			|| !preg_match('/^(?:\w+)?$/', $_POST['doctype'])) {
+			//msg("Fehler im System. Dateiupload fehlgeschlagen.", -1);
 			msg("Fehler im System. Dateiupload fehlgeschlagen.", -1);
 			return;
 		}
