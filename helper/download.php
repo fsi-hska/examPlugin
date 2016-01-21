@@ -33,7 +33,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 			$filter2 = array_filter($filter, $ff2);
 
 			return (count($filter2) > 0) ? reset($filter2) : reset($filter[0]);
-			
+
 		}
 
 	}
@@ -51,7 +51,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		$parsing = false;
 		$file = file($path, FILE_IGNORE_NEW_LINES);
 		$dozenten = array();
-		
+
 		$i = 1;
 
 		foreach($file as $line) {
@@ -99,8 +99,8 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 			$filepath .= '/'.$doctype;
 			$pagepath .= '/'.$doctype;
 		}
-		
-		
+
+
 		$result = array();
 		if (is_dir($filepath)) {
 			$files = scandir($filepath);
@@ -113,9 +113,9 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 					if (!file_exists($filepath.'/'.$pdfSolution)){
 						$pdfSolution = '';
 					}
-					$wikiSolutionExists = file_exists($pagepath.'/'.$wikiSolution); 
+					$wikiSolutionExists = file_exists($pagepath.'/'.$wikiSolution);
 					$wikiSolution = str_replace('.txt', '', $wikiSolution);
-					$result[$sem] = array('klausur' => $file, 'pdfSolution' => $pdfSolution, 
+					$result[$sem] = array('klausur' => $file, 'pdfSolution' => $pdfSolution,
 						'wikiSolution' => $wikiSolution, 'wikiSolutionExists' => $wikiSolutionExists,
 						'isCombi' => $isCombi);
 				}
@@ -157,7 +157,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 					$link = $this->getConf('unterlagenNS');
 					if($data['course']!="") $link .= '/'.$data['course'];
 					$link .= '/'.$data['lesson'].'/klausuren_info';
-					
+
 					$renderer->doc .= '<tr><td colspan="4">Dozent unbekannt. Bitte <a href="'
 						.wl($link).'">korrigieren</a>!</td></tr>';
 					$lastDozent = null;
@@ -176,14 +176,14 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 					} else {
 						$renderer->doc .= '<td>';
 					}
-		      		$renderer->doc .= '<a href="' . wl('_media/' . $path . "/" . $klausur['klausur'] ) 
+		      		$renderer->doc .= '<a href="' . wl('_media/' . $path . "/" . $klausur['klausur'] )
 						. '" class="media mediafile mf_pdf">Klausur ';
 					if($klausur['isCombi']) {
 						$renderer->doc .= '+ Lösung ';
 					}
 					$renderer->doc .= $help->getNiceText($sem) . '</a></td>';
 					if (!$klausur['isCombi'] && $klausur['pdfSolution'] != "") {
-		      			$renderer->doc .= '<td><a href="' . wl('_media/' . $path . "/" . 
+		      			$renderer->doc .= '<td><a href="' . wl('_media/' . $path . "/" .
 							$klausur['pdfSolution'] ) . '" class="media mediafile mf_pdf">L&ouml;sung ' . '</a></td>';
 					} elseif(!$klausur['isCombi']) {
 						$renderer->doc .= '<td></td>';
@@ -202,7 +202,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 						$renderer->doc .= '</tr>';
 					}
 				}
-				$sem = $help->getPrevSemester($sem); 
+				$sem = $help->getPrevSemester($sem);
 			}
 			$renderer->doc .= '<tr>';
 			$renderer->doc .= '<td><input type="checkbox" id="selectAll" name="selectAll" value="selectAll" onChange=\'if(this.checked) kl_checkAll(['.implode(',', $jsKlausuren).']); else kl_uncheckAll(['.implode(',', $jsKlausuren).']);\'/></td>';
@@ -211,7 +211,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 
 			$renderer->doc .= '</tbody>';
 			$renderer->doc .= '</table>';
-			$renderer->doc .= '<input type="submit" name="button" class="button" value="Herunterladen (zip)"/>';
+			$renderer->doc .= '<input type="submit" name="button" class="button" value="Auswahl herunterladen (zip)"/>';
 	        $renderer->doc .= '</form>';
 		} else {
 			$renderer->doc .= '<div class="noKlausuren">Leider stehen in diesem Fach noch keine Klausuren zur Verfügung.</div>';
@@ -267,7 +267,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 				// Convert wiki solution and add it to zip
 				$filename = $lesson.'_'.$semester.'_loesung';
 				if(file_exists($pagefilepath.$filename.'.txt')) {
-					$zipfile->addFile(PdfExport::convert($pagewebpath.$filename, 'Klausur '.$helper->getNiceText($semester).' '.$lesson.' Wiki'), 
+					$zipfile->addFile(PdfExport::convert($pagewebpath.$filename, 'Klausur '.$helper->getNiceText($semester).' '.$lesson.' Wiki'),
 						$filename.'_wiki.pdf', filemtime($pagefilepath.$filename.'.txt'));
 				}
 			} else {
