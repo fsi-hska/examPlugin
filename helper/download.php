@@ -186,7 +186,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 
 			$renderer->doc .= '</tbody>';
 			$renderer->doc .= '</table>';
-			$renderer->doc .= '<input type="submit" name="button" class="button" value="Herunterladen (zip)"/>';
+			$renderer->doc .= '<input type="submit" name="button" class="button" value="Auswahl herunterladen (zip)"/>';
 	        $renderer->doc .= '</form>';
 		} else {
 			$renderer->doc .= '<div class="noKlausuren">Leider stehen in diesem Fach noch keine Klausuren zur Verfügung.</div>';
@@ -211,7 +211,9 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		$zipfile = new zipfile();
 
 		foreach ($semesters as $semester) {
- 			// Datei einlesen
+			$zipIsEmpty = true;
+
+			// Datei einlesen
 			$filename = $lesson.'_'.$semester.'_klausur.pdf';
 			if(!file_exists($filepath.$filename)) {
 				$filename = $lesson.'_'.$semester.'_klausur_loesung.pdf';
@@ -233,12 +235,16 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 					$zipfile->addFile(PdfExport::convert($pagewebpath.$filename, 'Klausur '.$helper->getNiceText($semester).' '.$lesson.' Wiki'), 
 						$filename.'_wiki.pdf', filemtime($pagefilepath.$filename.'.txt'));
 				}
-			} else {
-				return null;
+				$zipIsEmpty = false;
 			}
 		}
-		// Zip File zurueckgeben
-		return $zipfile;
+		// Final check if at least one file was added to the archive
+		if($zipIsEmpty) {
+			return null;
+		} else {
+			// Zip File zurueckgeben
+			return $zipfile;
+		}
 
 	}
 

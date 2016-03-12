@@ -45,9 +45,20 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 	 * so the file will be downloaded.
 	 */
 	function files_download(&$event, $param) {
-
-		if(empty($_POST['klausur_download']))
+		if(empty($_POST)) {
 			return;
+		}
+
+		$helper =& plugin_load('helper', 'klausuren_download');
+		if(empty($_POST['klausur_download'])) {
+			$_POST['klausur_download'] = array();
+			$klausuren = $helper->getAllExams($_POST['lesson']);
+			foreach ($klausuren as $key => $value) {
+				array_push($_POST['klausur_download'], $key);
+			}
+		}
+
+
 
 		$NS = $this->getConf('unterlagenNS').'/'.$_POST['lesson'].'/';
 		$NS = cleanID($NS);
@@ -66,12 +77,11 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 			msg("Fehler im System. Dateidownload fehlgeschlagen.", -1);
 			return;
 		}
-	 
-		$helper =& plugin_load('helper', 'klausuren_download');
+
 		$zip = $helper->downloadAsZip($_POST['klausur_download'], $_POST['lesson']);
 
 		if($zip == null) {
-			msg("Es traten Fehler beim verpacken der Dateien auf.", -1);
+			msg("Es traten Fehler beim Verpacken der Dateien auf.", -1);
 			return;
 		}
 
