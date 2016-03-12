@@ -32,6 +32,11 @@ class helper_plugin_klausuren_helper extends Dokuwiki_Plugin {
 
 		$sem = array('ws','ss');
 
+		// Defaults $count to the first uploaded exam
+		if($count == 0) {
+			$count = (date('Y') - 1988) * 2;
+		}
+
 		if(date('m') <= 2) {
 			$currentY = date('Y') - 1;
 			$currentS = 0;
