@@ -61,6 +61,12 @@ class action_plugin_klausuren_upload extends DokuWiki_Action_Plugin {
 			return;
 		}
 
+		// Check if file is empty
+		if($_FILES['upload']['size'] <= 0) {
+			msg("Du hast keine Datei ausgewählt. Bitte klicke zunächst auf \"Durchsuchen\" und wähle dann die Klausur oder Lösung aus. ", -1);
+			return;
+		}
+
 		// Check if filetype is pdf
 		if(mime_content_type($_FILES['upload']['tmp_name']) != 'application/pdf') {
 			msg("Die Datei muss im PDF Format vorliegen. Falls du sie nicht konvertieren kannst, maile uns die Datei bitte.", -1);
@@ -108,7 +114,7 @@ class action_plugin_klausuren_upload extends DokuWiki_Action_Plugin {
 				$ID = $_POST['page'];
 				$NS = getNS($ID);
 			}
-		}	
+		}
 
 	}
 

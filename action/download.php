@@ -41,13 +41,24 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 
 	/**
 	 * The function checks if a user has requested download of files.
-	 * If (s)he has so, zip the requested files and rewrite http headers, 
+	 * If (s)he has so, zip the requested files and rewrite http headers,
 	 * so the file will be downloaded.
 	 */
 	function files_download(&$event, $param) {
-
-		if(empty($_POST['klausur_download']))
+		if(empty($_POST)) {
 			return;
+		}
+
+		$helper =& plugin_load('helper', 'klausuren_download');
+		if(empty($_POST['klausur_download'])) {
+			$_POST['klausur_download'] = array();
+			$klausuren = $helper->getAllExams($_POST['lesson']);
+			foreach ($klausuren as $key => $value) {
+				array_push($_POST['klausur_download'], $key);
+			}
+		}
+
+
 
 		$NS = $this->getConf('unterlagenNS').'/';
 		if($_POST['course']!="") $NS .= $_POST['course'].'/';
@@ -61,7 +72,7 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 			msg("Keine Rechte die Dateien herunterzuladen.", -1);
 			return;
 		}
-		
+
 		// Check if post data is valid
 		$filter = function($var) { return !preg_match('/^\d{4}(ws|ss)$/', $var); };
 		$filtered = array_filter($_POST['klausur_download'], $filter);
@@ -69,12 +80,11 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 			msg("Fehler im System. Dateidownload fehlgeschlagen.", -1);
 			return;
 		}
-	 
-		$helper =& plugin_load('helper', 'klausuren_download');
+
 		$zip = $helper->downloadAsZip($_POST['klausur_download'], $_POST['lesson'], $_POST['course'], $_POST['doctype']);
 
 		if($zip == null) {
-			msg("Es traten Fehler beim verpacken der Dateien auf.", -1);
+			msg("Es traten Fehler beim Verpacken der Dateien auf.", -1);
 			return;
 		}
 
