@@ -39,6 +39,9 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 	}
 
 	private function getAllDozenten($kurs, $course="", $doctype="klausuren") {
+		// QuickFix for Issue 18 (https://github.com/fsi-hska/examPlugin/issues/18)
+		// Reason: doctype isn't used as intended in our implementation
+		if($doctype == "") $doctype = "klausuren";
 
 		$path = DOKU_INC."data/pages/".$this->getConf('unterlagenNS');
 		if($course!="") $path .= '/'.$course;
