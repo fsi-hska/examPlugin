@@ -127,6 +127,10 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 		return $result;
 	}
 
+	function getDownloadButtonText() {
+		return "Auswahl herunterladen (zip)";
+	}
+
 	function output(&$renderer, $data){
 		global $ID;
 		$help = plugin_load('helper','klausuren_helper');
@@ -214,7 +218,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 
 			$renderer->doc .= '</tbody>';
 			$renderer->doc .= '</table>';
-			$renderer->doc .= '<input type="submit" name="button" class="button" value="Auswahl herunterladen (zip)"/>';
+			$renderer->doc .= '<input type="submit" name="button" class="button" value="' . $this->getDownloadButtonText()  . '"/>';
 	        $renderer->doc .= '</form>';
 		} else {
 			$renderer->doc .= '<div class="noKlausuren">Leider stehen in diesem Fach noch keine Klausuren zur Verfügung.</div>';
