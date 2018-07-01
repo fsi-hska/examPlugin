@@ -31,8 +31,8 @@ class action_plugin_klausuren_infopage extends DokuWiki_Action_Plugin {
 	}
 
 	function _isInfoPage($id) {
-		
-		$s = split(':', $id);
+
+		$s = explode(':', $id);
 
 		return ($s[count($s)-1] == 'klausuren_info');
 
@@ -42,7 +42,7 @@ class action_plugin_klausuren_infopage extends DokuWiki_Action_Plugin {
 
 		global $ACT, $ID;
 
-		if($ACT != 'show' || !$this->_isInfoPage($ID)) 
+		if($ACT != 'show' || !$this->_isInfoPage($ID))
 			return;
 
 		$content = file_get_contents(DOKU_PLUGIN.'/klausuren/infopage.txt');
