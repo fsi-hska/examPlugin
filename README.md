@@ -1,7 +1,7 @@
 Exam Plugin
 ============
 
-Dies ist ein Dokwuikiplugin, um Benutzern eine einfach Möglichkeit zum 
+Dies ist ein Dokwuikiplugin, um Benutzern eine einfach Möglichkeit zum
 Up- und Download von Klausuren und deren Lösungen zu geben.
 
 
@@ -24,8 +24,8 @@ Die Datei LICENSE beinhaltet weitere Informationen.
 Funktionsweise
 --------------
 
-Zunächst muss in den Einstellunngen ein Upload Namespace festgelegt werden. In diesen Namespace 
-werden anschließend alle Klausuren und Lösungen hochgeladen. Ebenso werden die Wiki Lösungsseiten 
+Zunächst muss in den Einstellunngen ein Upload Namespace festgelegt werden. In diesen Namespace
+werden anschließend alle Klausuren und Lösungen hochgeladen. Ebenso werden die Wiki Lösungsseiten
 in diesem liegen. Wir verwenden dafür z.B. :vorlesungen:unterlagen:.
 
 Anschließend kann auf jeder beliebigen Wikiseite folgender Tag verwendet werden:

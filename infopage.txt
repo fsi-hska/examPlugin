@@ -2,7 +2,7 @@
 
 Um Informationen über die Dozenten dieser Klausur zu hinterlegen, bearbeite einfach diese Seite.
 
-Die Seite muss lediglich einen [klausuren]..[/klausuren] Block beinhalten. Jede Zeile stellt 
+Die Seite muss lediglich einen [klausuren]..[/klausuren] Block beinhalten. Jede Zeile stellt
 dabei einen Eintrag in folgender Form da:
 
   JahrSemester[-JahrSemester]:Name des Dozenten
