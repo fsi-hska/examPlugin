@@ -250,8 +250,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 
 		// Zip Libary einbinden
 		require("zip.lib.php");
-		require(dirname(__FILE__)."/../pdf/pdf.php");
-		// neuse Zip Objekt erstellen
+		// neues Zip Objekt erstellen
 		$zipfile = new zipfile();
 
 		foreach ($semesters as $semester) {
