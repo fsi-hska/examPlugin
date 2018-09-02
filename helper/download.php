@@ -143,12 +143,12 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 			$lastDozent = array();
 			$dozenten = $this->getAllDozenten($data['lesson'], $data['course'], $data['doctype']);
 
-		    $renderer->doc .= '<form action="'.wl($ID).'" method="post">';
+			$renderer->doc .= '<form action="'.wl($ID).'" method="post">';
 			$renderer->doc .= '<input type="hidden" name="lesson" value="'.$data['lesson'].'">';
 			$renderer->doc .= '<input type="hidden" name="course" value="'.$data['course'].'">';
 			$renderer->doc .= '<input type="hidden" name="doctype" value="'.$data['doctype'].'">';
-	 		$renderer->doc .= '<table class="inline klausuren_download">';
-	        $renderer->doc .= '<tbody>';
+			$renderer->doc .= '<table class="inline klausuren_download">';
+			$renderer->doc .= '<tbody>';
 
 			$path =  $this->getConf('unterlagenNS');
 			if($data['course']!="") $path .= '/'.$data['course'];
@@ -183,29 +183,29 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 					} else {
 						$renderer->doc .= '<td>';
 					}
-		      		$renderer->doc .= '<a href="' . wl('_media/' . $path . "/" . $klausur['klausur'] )
+						$renderer->doc .= '<a href="' . wl('_media/' . $path . "/" . $klausur['klausur'] )
 						. '" class="media mediafile mf_pdf">Klausur ';
 					if($klausur['isCombi']) {
 						$renderer->doc .= '+ Lösung ';
 					}
 					$renderer->doc .= $help->getNiceText($sem) . '</a></td>';
 					if (!$klausur['isCombi'] && $klausur['pdfSolution'] != "") {
-		      			$renderer->doc .= '<td><a href="' . wl('_media/' . $path . "/" .
+						$renderer->doc .= '<td><a href="' . wl('_media/' . $path . "/" .
 							$klausur['pdfSolution'] ) . '" class="media mediafile mf_pdf">L&ouml;sung ' . '</a></td>';
 					} elseif(!$klausur['isCombi']) {
 						$renderer->doc .= '<td></td>';
 					}
 					if ($klausur['wikiSolutionExists'] == 1) {
-		      				$renderer->doc .= '<td><a href="' . wl('' . $path . "/" . $klausur['wikiSolution'] ) . '">Wiki-L&ouml;sung ' . '</a></td>';
+						$renderer->doc .= '<td><a href="' . wl('' . $path . "/" . $klausur['wikiSolution'] ) . '">Wiki-L&ouml;sung ' . '</a></td>';
 					} else {
-			      			$renderer->doc .= '<td><a href="' . wl('' . $path . "/" . $klausur['wikiSolution'] ) . '" class="wikilink2" title="Noch keine Wikilösung vorhanden.">Wiki-L&ouml;sung ' . '</a></td>';
+						$renderer->doc .= '<td><a href="' . wl('' . $path . "/" . $klausur['wikiSolution'] ) . '" class="wikilink2" title="Noch keine Wikilösung vorhanden.">Wiki-L&ouml;sung ' . '</a></td>';
 					}
 					$renderer->doc .= '</tr>';
 				} else {
 					if ($sem != $help->getCurrentSemester()){
 						$renderer->doc .= '<tr>';
 						$renderer->doc .= '<td><input type="checkbox" name="klausur" value="' . $data['lesson'] . '_' . $sem . '" disabled="disabled"/></td>';
-				      	$renderer->doc .= '<td colspan="3">Klausur ' . $help->getNiceText($sem) . ' nicht vorhanden.</a></td>';
+						$renderer->doc .= '<td colspan="3">Klausur ' . $help->getNiceText($sem) . ' nicht vorhanden.</a></td>';
 						$renderer->doc .= '</tr>';
 					}
 				}
@@ -213,13 +213,13 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 			}
 			$renderer->doc .= '<tr>';
 			$renderer->doc .= '<td><input type="checkbox" id="selectAll" name="selectAll" value="selectAll" onChange=\'if(this.checked) kl_checkAll(['.implode(',', $jsKlausuren).']); else kl_uncheckAll(['.implode(',', $jsKlausuren).']);\'/></td>';
-	   		$renderer->doc .= '<td colspan="3"><label class="selectAll" for="selectAll">Alle ausw&auml;hlen</label></a></td>';
+			$renderer->doc .= '<td colspan="3"><label class="selectAll" for="selectAll">Alle ausw&auml;hlen</label></a></td>';
 			$renderer->doc .= '</tr>';
 
 			$renderer->doc .= '</tbody>';
 			$renderer->doc .= '</table>';
 			$renderer->doc .= '<input type="submit" name="button" class="button" value="' . $this->getDownloadButtonText()  . '"/>';
-	        $renderer->doc .= '</form>';
+			$renderer->doc .= '</form>';
 		} else {
 			$renderer->doc .= '<div class="noKlausuren">Leider stehen in diesem Fach noch keine Klausuren zur Verfügung.</div>';
 		}
