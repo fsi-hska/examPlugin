@@ -45,7 +45,7 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 	 * so the file will be downloaded.
 	 */
 	function files_download(&$event, $param) {
-		$helper =& plugin_load('helper', 'klausuren_download');
+		$helper = plugin_load('helper', 'klausuren_download');
 		if(empty($_POST) || empty($_POST['button']) || ($_POST['button'] != $helper->getDownloadButtonText())) {
 			return;
 		}

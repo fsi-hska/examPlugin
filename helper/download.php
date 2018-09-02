@@ -246,7 +246,7 @@ class helper_plugin_klausuren_download extends Dokuwiki_Plugin {
 			$pagewebpath .=  $doctype.':';
 			$pagefilepath .=  $doctype.'/';
 		}
-		$helper =& plugin_load('helper', 'klausuren_helper');
+		$helper = plugin_load('helper', 'klausuren_helper');
 
 		// Zip Libary einbinden
 		require("zip.lib.php");
