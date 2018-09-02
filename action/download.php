@@ -23,7 +23,7 @@ class action_plugin_klausuren_download extends DokuWiki_Action_Plugin {
 	/**
 	 * Register its handlers with the dokuwiki's event controller
 	 */
-	function register(&$controller) {
+	function register(Doku_Event_Handler $controller) {
 		$controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this,
 			'files_download');
 		$controller->register_hook('PARSER_CACHE_USE', 'BEFORE', $this,

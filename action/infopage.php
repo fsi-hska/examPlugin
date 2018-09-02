@@ -23,7 +23,7 @@ class action_plugin_klausuren_infopage extends DokuWiki_Action_Plugin {
 	/**
 	 * Register its handlers with the dokuwiki's event controller
 	 */
-	function register(&$controller) {
+	function register(Doku_Event_Handler $controller) {
 		$controller->register_hook('PARSER_WIKITEXT_PREPROCESS', 'BEFORE', $this,
 			'showInfoPage');
 		$controller->register_hook('COMMON_PAGETPL_LOAD', 'BEFORE', $this,
