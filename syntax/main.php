@@ -37,7 +37,7 @@ class syntax_plugin_klausuren_main extends DokuWiki_Syntax_Plugin {
 	 * Prepare matches for the renderer.
 	 * Extract the lesson from the used string.
 	 */
-	function handle($match, $state, $pos, &$handler){
+	function handle($match, $state, $pos, Doku_Handler $handler){
 
 		// Grep for lesson
 		preg_match('/\{\{klausuren>(?:([\w\d]+)\/)?(\w+?)(?:>(\w+?))?\}\}/',$match,$data);
@@ -50,7 +50,7 @@ class syntax_plugin_klausuren_main extends DokuWiki_Syntax_Plugin {
 	/**
 	 * Renders the tag to the list of examns and if priviledeg the upload form.
 	 */
-	function render($mode, $renderer, $data) {
+	function render($mode, Doku_Renderer $renderer, $data) {
 		if($mode != 'xhtml')
 			return false;
 
